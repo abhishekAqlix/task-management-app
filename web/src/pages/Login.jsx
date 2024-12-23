@@ -13,13 +13,22 @@ function Login() {
     e.preventDefault();
     setError("");
     try {
-      const response = await axios.post("http://localhost:3000/user/login", {
+      const response = await axios.post("http://localhost:4000/user/login", {
         email,
         password,
-      });
+      }
+      // ,{
+      // headers: {
+      //   Authorization: `Bearer ${response.data.token}`, 
+      // }}
+    );
 
       if (response.data.status === "success") {
         console.log("Login Successful:", response.data.message);
+
+        const token = response.data.token; 
+        localStorage.setItem("token", token); 
+      
         navigate("/task");
       } else {
         setError(response.data.message || "Login failed.");
