@@ -2,6 +2,11 @@ import { Routes , Route, BrowserRouter} from 'react-router-dom';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import TaskManager from './pages/TaskManager';
+ 
+
+//Css
+import './App.css';
+
 
 
 function App() {

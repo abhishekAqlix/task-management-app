@@ -1,13 +1,15 @@
 const express = require('express');
+const cors = require('cors'); 
 const connectDB = require('./Db');
 const taskRoutes = require('./routes/taskRoutes');
-const userRoutes = require('./routes/userRoutes') 
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
-const port = 3000;
+const port = 4000;
 
 // Middlewares //
 app.use(express.json());
+app.use(cors()); 
 
 connectDB();
 

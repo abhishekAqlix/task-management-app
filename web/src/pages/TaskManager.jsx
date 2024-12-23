@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, Container, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { FaEdit, FaTrashAlt, FaPlus } from "react-icons/fa";
 import Modle from '../component/Modle'
 import { addTask, deleteTask, editTask } from "../redux/taskSlice";
 import "react-toastify/dist/ReactToastify.css";
@@ -21,9 +22,9 @@ function TaskManager() {
   function handleSave(saveValue) {
    if(editValue){ 
       dispatch(editTask({ index: editValue.index, saveValue }) )
-   } else {
+    } else {
       dispatch(addTask(saveValue)) } 
-    
+
     setShowModal(false);
     setEditValue(null);
   }
@@ -41,13 +42,17 @@ function TaskManager() {
   // },[task])
 
   return (
-    <Container>
-      <Button onClick={() => setShowModal(true)} className="mx-2 my-3">
-        Add Task
-      </Button>
-
-      <Table>
-        <thead>
+    <Container className="py-4">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h1 className="text-secondary">Task Manager</h1>
+      
+        <Button onClick={() => setShowModal(true)} variant="outline-primary">
+          <FaPlus className="me-2" /> Add Task
+        </Button>
+      </div>
+      <hr className="flex-grow-1 mx-2 my-3 border-top border-secondary" />
+      <Table striped bordered hover responsive className="shadow-sm">
+        <thead className="bg-light text-secondary">
           <tr>
             <th>Title</th>
             <th>Discription</th>
@@ -62,24 +67,36 @@ function TaskManager() {
               <td>{value.title}</td>
               <td>{value.description}</td>
               <td>{value.priority}</td>
-              <td>{value.status}</td>
-              <td>
-                <button
-                  onClick={() => {
-                    handleDelete(index);
-                  }}
-                  className="me-3"
-                >
-                  Delete
-                </button>
-                <button
-                  onClick={() => {
-                    handleEdit(value, index);
-                  }}
-                >
-                  Edit
-                </button>
+              <td
+                className={
+                  value.status === "Done"
+                    ? "text-success"
+                    : value.status === "Invalid"
+                    ? "text-danger"
+                    : "text-warning"
+                }
+              >
+                {value.status}
               </td>
+              <td className="d-flex justify-content-start" width={'100px'}>
+                <Button
+                  onClick={() => handleEdit(value, index)}
+                  variant="outline-info"
+                  size="sm"
+                  className="me-2 d-flex align-items-center"
+                >
+                  <FaEdit className="me-1" /> Edit
+                </Button>
+                <Button
+                  onClick={() => handleDelete(index)}
+                  variant="outline-danger"
+                  size="sm"
+                  className="d-flex align-items-center"
+                >
+                  <FaTrashAlt className="me-1" /> Delete
+                </Button>
+              </td>
+
             </tr>
           ))}
         </tbody>
