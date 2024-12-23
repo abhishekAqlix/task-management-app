@@ -23,6 +23,7 @@ const register = async (req, res, next) => {
       },
     });
   } catch (err) {
+    console.log(err)
     return res.status(500).send({ error: "An error occurred during Register." });
   }
 };
@@ -36,8 +37,9 @@ const login = async (req, res, next) => {
       return res.status(400).send({ message: "email and password required." });
     }
     const users = await User.findOne({ email }).select("+password");
+    const users = await User.findOne({ email }).select("+password");
     if (!users || !(await users.correctPassword(password, users.password))) {
-      return res.status(401).send({ message: "Invalid credentials" });
+      return res.status(500).send({ message: "Invalid credentials" });
     }
 
     const token = signToken(users._id);
@@ -54,3 +56,4 @@ const login = async (req, res, next) => {
 };
 
 module.exports = { register , login };
+

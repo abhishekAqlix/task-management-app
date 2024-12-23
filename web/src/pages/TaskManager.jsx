@@ -1,19 +1,37 @@
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import { Button, Container, Table } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { FaEdit, FaTrashAlt, FaPlus } from "react-icons/fa";
 import Modle from '../component/Modle'
-import { addTask, deleteTask, editTask } from "../redux/taskSlice";
+import { addTask, editTask } from "../redux/taskSlice";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import NotificationDropdown from "./NotficationDropdown";
+import { useCreateTaskMutation, useDeleteIdMutation, useGetTasksQuery } from "../services/apiCall";
+
 
 function TaskManager() {
-  const task = useSelector((state) => state.tasks);
+  //const task = useSelector((state) => state.tasks);
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const [editValue, setEditValue] = useState(null);
+  const [createTask ] = useCreateTaskMutation();
+  const response = useGetTasksQuery();
+  const [deleteTask] =useDeleteIdMutation();
 
+console.log("task",response )
+
+  useEffect(()=>{
+    if(response.isLoading){
+      console.log('loading....');
+      }
+      if(response.isSuccess){
+        console.log("response",response)
+      }
+      
+  },[response , createTask])
+
+ 
   function handleEdit(value, index) {
     console.log("value", value);
     setEditValue({ ...value, index });
@@ -23,24 +41,24 @@ function TaskManager() {
   function handleSave(saveValue) {
    if(editValue){ 
       dispatch(editTask({ index: editValue.index, saveValue }) )
-    } else {
-      dispatch(addTask(saveValue)) } 
-
+   } else {
+      dispatch(addTask(saveValue)) 
+       createTask(saveValue)
+    } 
+          
     setShowModal(false);
     setEditValue(null);
   }
 
-  function handleDelete(index) {
-    if (task[index].status === "Done" || task[index].status === "Invalid") {
-      dispatch(deleteTask(index));
+  function handleDelete(status , id) {
+    if (status === "Done" || status === "Invalid") {
+      //dispatch(deleteTask(index));
+        deleteTask(id)
+
     } else {
       toast.error("First complete your task!!");
     }
   }
-
-  // useEffect(()=>{
-  //   console.log("task",task);
-  // },[task])
 
   return (
     <Container className="py-4">
@@ -67,7 +85,7 @@ function TaskManager() {
           </tr>
         </thead>
         <tbody>
-          {task.map((value, index) => (
+          {response?.data?.map((value, index) => (
             <tr key={index}>
               <td>{value.title}</td>
               <td>{value.description}</td>
@@ -120,3 +138,43 @@ function TaskManager() {
 
 
 export default TaskManager;
+
+
+
+
+
+
+
+// import React, { useEffect } from 'react';
+// import { useCreateUserMutation } from '../services/apiCall';
+// import { useDispatch } from 'react-redux';
+// import { addTask } from '../slices/taskSlice';
+
+// const MyComponent = () => {
+//   const dispatch = useDispatch();
+//   const [createUser, res] = useCreateUserMutation();
+
+//   const handleAddTask = (task) => {
+//     dispatch(addTask(task));
+//     createUser(task);
+//   };
+
+//   useEffect(() => {
+//     if (res.isLoading) {
+//       console.log('loading....');
+//     }
+//     if (res.isSuccess) {
+//       console.log('response', res);
+//     }
+//   }, [res]);
+
+//   return (
+//     <div>
+//       <button onClick={() => handleAddTask({ id: 1, name: 'New Task' })}>
+//         Add Task
+//       </button>
+//     </div>
+//   );
+// };
+
+// export default MyComponent;

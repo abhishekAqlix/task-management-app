@@ -16,15 +16,31 @@ const getTask = async (req, res) => {
 
 
 const createTask = async (req, res) => {
-  const { title, description, status } = req.body;
+  const { title, description,priority, status } = req.body;
 
   try {
-    const newTask = await Task.create({ title, description, status });
+    const newTask = await Task.create({ title, description,priority, status });
     res.status(201).json(newTask);
   } catch (error) {
     res.status(500).json({ message: 'Error creating task', error });
   }
 };
+// delete Task
+const deleteTask = async(req,res) => {
+  try{ 
+     const task =await Task.findByIdAndDelete(req.params.id, function (err, docs) {
+    if (err){
+        console.log(err)
+    }
+    else{
+        console.log("Deleted : ", docs);
+    }
+});}
+  catch (error) {
+    res.status(500).json({ error });
+  }
+} ;
 
 
-module.exports = { getTask, createTask };
+
+module.exports = { getTask, createTask , deleteTask };

@@ -8,20 +8,20 @@ import {
   MDBModalBody,
   MDBModalFooter,
 } from "mdb-react-ui-kit";
-import { Form } from "react-bootstrap";
+import { Form  } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 export default function Modle({ onOpen, onClose, onSave, edit }) {
   const [title, setTitle] = useState(edit ? edit.title : "");
   const [description, setDescription] = useState(edit ? edit.description : "");
-  const [priority, setPriority] = useState(edit ? edit.priority : " ");
+  const [priority, setPriority] = useState(edit ? edit.priority : "High");
+  const [dueDate, setDueDate] = useState(edit ? edit.dueDate : " ");
   const [status, setStatus] = useState(edit ? edit.status : "Todo");
 
   const clickSave = () => {
     if (
       title.length === 0 ||
-      description.length === 0 ||
-      priority.length === 0
+      description.length === 0 
     ) {
       toast.error("title , description , priority are must!!");
     } else {
@@ -73,6 +73,17 @@ export default function Modle({ onOpen, onClose, onSave, edit }) {
                     <option value="Medium"> Medium </option>
                     <option value="Low"> Low </option>
                   </select>
+                </div>
+                 
+                <div className="mx-2 my-3">
+                  <strong className="mb-2">Due Date</strong>
+                  <imput
+                    className="form-control"
+                    type="date"
+                    value={dueDate}
+                    onChange={(e) => setDueDate(e.target.value)}
+                    placeholder="Discription.."
+                  />
                 </div>
 
                 <div className="mx-2 my-3">
