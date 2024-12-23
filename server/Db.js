@@ -4,7 +4,7 @@ require('dotenv').config();
 const connectDB = async () => {
 
   try {
-    // create a env file and copy paste variables from env.example file
+    // create a env file and copy paste variables from env.example file ..pl
     await mongoose.connect(process.env.MONGODB_URI, {
     });
     console.log('MongoDB connected successfully!');
