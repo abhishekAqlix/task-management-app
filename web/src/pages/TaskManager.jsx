@@ -6,6 +6,7 @@ import Modle from '../component/Modle'
 import { addTask, deleteTask, editTask } from "../redux/taskSlice";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
+import NotificationDropdown from "./NotficationDropdown";
 
 function TaskManager() {
   const task = useSelector((state) => state.tasks);
@@ -46,9 +47,13 @@ function TaskManager() {
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h1 className="text-secondary">Task Manager</h1>
       
-        <Button onClick={() => setShowModal(true)} variant="outline-primary">
+
+    <div className="d-flex justify-content-between">
+        <Button onClick={() => setShowModal(true)} variant="outline-primary" className="mx-1">
           <FaPlus className="me-2" /> Add Task
         </Button>
+        <NotificationDropdown />
+        </div>
       </div>
       <hr className="flex-grow-1 mx-2 my-3 border-top border-secondary" />
       <Table striped bordered hover responsive className="shadow-sm">
