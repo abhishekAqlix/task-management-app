@@ -13,8 +13,6 @@ baseQuery: fetchBaseQuery({
         }
         return headers
       },
-
-
 }),
 tagTypes: ['Task'],
 endpoints :(builder)=>({
@@ -29,9 +27,10 @@ endpoints :(builder)=>({
 
 deleteId : builder.mutation({
     query : (id)=>({
-             url :`:${id}`,
+             url :`${id}`,
              method : 'DELETE'
-        })
+        }),
+        invalidatesTags: ['Task'],
 }),
 createTask : builder.mutation({
     query : (newUser)=>({
@@ -41,36 +40,18 @@ createTask : builder.mutation({
     }),
     invalidatesTags: ['Task'],
  }),
-//  updateUser  : builder.mutation({
-//     query : (updated)=>{
-//         // const {id , ...data} = updated
-
-//        return { 
-//         // url : `api/task/${id}`,
-//         // method : 'PUT',
-//         // body:data,
-        
-//     }}
-//  }),
+  updateTask  : builder.mutation({
+     query : ({id , saveValue})=>{
+          
+        return { 
+          url : `${id}`,
+          method : 'PUT',
+          body: saveValue
+     }},
+     invalidatesTags: ['Task'],
+  }),
   
 
 })
 })
-export const { useGetTasksQuery ,useUpdateUserMutation  , useDeleteIdMutation  , useCreateTaskMutation} = apiCall
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export const { useGetTasksQuery ,useUpdateTaskMutation  , useDeleteIdMutation  , useCreateTaskMutation} = apiCall
