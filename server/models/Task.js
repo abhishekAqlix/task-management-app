@@ -9,6 +9,15 @@ const TaskSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  priority:{
+    type: String,
+    required: true,
+  },
+    dueDate:{
+    type: String,
+    required: true,
+  },
+  
   status: {
     type: String,
     default: 'pending',
