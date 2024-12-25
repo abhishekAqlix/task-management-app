@@ -36,9 +36,9 @@ const NotificationDropdown = () => {
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [notificationCount]);
 
-  const notificationCount = notifications.length;
+ 
 
   return (
     <div>

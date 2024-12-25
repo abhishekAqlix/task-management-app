@@ -10,7 +10,7 @@ const scheduleNotificationJob = () => {
       const tasksDueSoon = await Task.find({
         dueDate: { $gte: now, $lt: oneHourLater },
       });
-  
+
       if (tasksDueSoon.length > 0) {
         console.log(`Tasks due within the next hour:`, tasksDueSoon);
         io.emit('tasksDueSoon', tasksDueSoon);
