@@ -8,6 +8,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import NotificationDropdown from "./NotficationDropdown";
 import { useCreateTaskMutation, useDeleteIdMutation, useGetTasksQuery } from "../services/apiCall";
+import socketIO from 'socket.io-client';
+
+
 
 
 function TaskManager() {
@@ -18,6 +21,7 @@ function TaskManager() {
   const [createTask ] = useCreateTaskMutation();
   const response = useGetTasksQuery();
   const [deleteTask] =useDeleteIdMutation();
+  const socket = socketIO.connect('http://localhost:4000');
 
 console.log("task",response )
 
@@ -111,7 +115,7 @@ console.log("task",response )
                   <FaEdit className="me-1" /> Edit
                 </Button>
                 <Button
-                  onClick={() => handleDelete(index)}
+                  onClick={() => handleDelete(value.status , value._id , index)}
                   variant="outline-danger"
                   size="sm"
                   className="d-flex align-items-center"

@@ -1,3 +1,4 @@
+const { Error } = require('mongoose');
 const Task = require('../models/Task');
 
 // @desc    Fetch all tasks
@@ -28,15 +29,16 @@ const createTask = async (req, res) => {
 // delete Task
 const deleteTask = async(req,res) => {
   try{ 
-     const task =await Task.findByIdAndDelete(req.params.id, function (err, docs) {
-    if (err){
-        console.log(err)
+    console.log(req.params)
+    const task = await Task.findOne({_id : req.params.id});
+    console.log("task",task)
+    if(task){
+      await Task.deleteOne({_id : req.params.id})
     }
-    else{
-        console.log("Deleted : ", docs);
-    }
-});}
+    return res.status(200).send({msg : "deleted!"})
+}
   catch (error) {
+    console.log("error",Error)
     res.status(500).json({ error });
   }
 } ;

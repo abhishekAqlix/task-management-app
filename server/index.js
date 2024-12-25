@@ -1,28 +1,54 @@
 const express = require('express');
-const cors = require('cors'); 
+const cors = require('cors');
+const { createServer } = require('node:http');
 const connectDB = require('./Db');
-const cors = require('cors')
+const scheduleNotificationJob = require('./services/notification-cronJob');
 const taskRoutes = require('./routes/taskRoutes');
 const userRoutes = require('./routes/userRoutes');
+const { Server } = require('socket.io');
 
 const app = express();
 const port = 4000;
 
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"]
+  }
+});
+
 // Middlewares //
 app.use(express.json());
-app.use(cors()); 
-
+app.use(cors());
+scheduleNotificationJob();
 connectDB();
 
-app.use(cors());
-
-app.use('/user' , userRoutes);
+app.use('/user', userRoutes);
 app.use('/api/task', taskRoutes);
 
 app.get('/', (req, res) => {
   res.send('Welcome to the Express App, please navigate to /api to access the data!');
 });
 
-app.listen(port, () => {
+io.on('connection', (socket) => {
+  console.log('a user connected');
+
+  socket.on('taskUpdated', (task) => {
+    socket.broadcast.emit('taskUpdated', task);
+    console.log('Task updated notification --sent', task);
+  });
+
+  socket.on('taskDeleted', (taskId) => {
+    socket.broadcast.emit('taskDeleted', taskId);
+    console.log('Task deleted notification --sent', taskId);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
+
+server.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });

@@ -37,7 +37,6 @@ const login = async (req, res, next) => {
       return res.status(400).send({ message: "email and password required." });
     }
     const users = await User.findOne({ email }).select("+password");
-    const users = await User.findOne({ email }).select("+password");
     if (!users || !(await users.correctPassword(password, users.password))) {
       return res.status(500).send({ message: "Invalid credentials" });
     }
