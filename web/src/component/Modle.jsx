@@ -21,14 +21,16 @@ export default function Modle({ onOpen, onClose, onSave, edit }) {
   const clickSave = () => {
     if (
       title.length === 0 ||
-      description.length === 0 
+      description.length === 0 ||
+      dueDate.length === 0
     ) {
-      toast.error("title , description , priority are must!!");
+      toast.error("title , description , dueDate are must!!");
     } else {
-      onSave({ title, description, priority, status });
+      onSave({ title,description,priority,dueDate,status });
     }
   };
 
+  
   return (
     <>
       <MDBModal open={onOpen}>
@@ -76,15 +78,15 @@ export default function Modle({ onOpen, onClose, onSave, edit }) {
                 </div>
                  
                 <div className="mx-2 my-3">
-                  <strong className="mb-2">Due Date</strong>
-                  <imput
+                  <strong className="mb-2">Due Date</strong> 
+                  <input
                     className="form-control"
                     type="date"
                     value={dueDate}
                     onChange={(e) => setDueDate(e.target.value)}
-                    placeholder="Discription.."
+                    placeholder="Description.."
                   />
-                </div>
+                </div> 
 
                 <div className="mx-2 my-3">
                   <strong className="mb-2">Status</strong>
@@ -95,8 +97,8 @@ export default function Modle({ onOpen, onClose, onSave, edit }) {
                   >
                     <option value="Todo"> Todo </option>
                     <option value="Progress"> Progress </option>
-                    <option value="Done"> Done </option>
-                    <option value="Invalid"> Invalid </option>
+                    <option value="Done"  disabled={!edit}> Done </option>
+                    <option value="Invalid"  disabled={!edit}> Invalid </option>
                   </select>
                 </div>
               </Form>

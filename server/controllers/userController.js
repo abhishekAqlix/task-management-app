@@ -1,7 +1,12 @@
 const User = require("../models/User");
+const express= require("express");
 const jwt = require("jsonwebtoken");
+const cookieParser =require("cookie-parser");
 require('dotenv').config(); 
 
+
+const app = express();
+app.use(cookieParser());
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -42,6 +47,7 @@ const login = async (req, res, next) => {
     }
 
     const token = signToken(users._id);
+    
 
     return res.status(200).json({
       status: "success",
