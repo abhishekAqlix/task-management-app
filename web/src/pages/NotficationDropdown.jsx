@@ -1,50 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import {
-  MDBDropdown,
-  MDBDropdownMenu,
-  MDBDropdownToggle,
-  MDBDropdownItem,
-  MDBBadge
-} from 'mdb-react-ui-kit';
+import React, { useEffect, useState } from 'react';
+import io from 'socket.io-client';
+import { MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem, MDBBadge } from 'mdb-react-ui-kit';
 import { FaBell } from 'react-icons/fa';
-import socketIO from 'socket.io-client';
+
+const socket = io('http://localhost:4000', { transports: ['websocket'] });
 
 const NotificationDropdown = () => {
   const [notifications, setNotifications] = useState([]);
+  const [notificationCount, setNotificationCount] = useState(0);
+
+  console.log('notifications:', notifications);
 
   useEffect(() => {
-    const socket = socketIO.connect('http://localhost:4000');
-
-    socket.on('connection', () => {
-      console.log('Connected to the server');
+    socket.on('connect', () => {
+      console.log('Connected to server for notification');
     });
 
-    socket.on('taskUpdated', (task) => {
-      setNotifications((prevNotifications) => [
-        ...prevNotifications,
-        { id: task._id, message: `Task updated: ${task.title}` }
-      ]);
+    socket.on('connect_error', (err) => {
+      console.error('Socket connection error:', err);
     });
 
-    socket.on('taskDeleted', (taskId) => {
-      setNotifications((prevNotifications) => [
-        ...prevNotifications,
-        { id: taskId, message: `Task deleted: ${taskId}` }
-      ]);
+    // recieving tasksDue event from the server!!
+    socket.on('tasksDue', (tasks) => {
+      console.log('Received tasks:', tasks);
+      const newNotifications = tasks.map(task => ({
+        message: `Task due soon: ${task.title}`,
+        id: task._id,
+      }));
+      setNotifications(newNotifications
+      );
+      setNotificationCount(newNotifications.length);
     });
 
     return () => {
-      socket.disconnect();
+      socket.off('tasksDue');
+      socket.off('connect');
+      socket.off('connect_error');
     };
-  }, [notificationCount]);
-
- 
+  }, []);
 
   return (
     <div>
       <MDBDropdown>
         <MDBDropdownToggle tag="button" className="btn btn-primary">
-          <FaBell style={{ color: 'crimson', marginRight: '8px' }} />
+          <FaBell style={{ color: 'white', marginRight: '8px' }} />
           {notificationCount > 0 && (
             <MDBBadge color="danger" className="ms-2">
               {notificationCount}
@@ -54,12 +53,12 @@ const NotificationDropdown = () => {
         <MDBDropdownMenu>
           {notifications.length > 0 ? (
             notifications.map((notification) => (
-              <MDBDropdownItem key={notification.id} link childTag='button'>
+              <MDBDropdownItem key={notification.id} link as="button">
                 {notification.message}
               </MDBDropdownItem>
             ))
           ) : (
-            <MDBDropdownItem link childTag='button'>
+            <MDBDropdownItem link as="button">
               No notifications
             </MDBDropdownItem>
           )}

@@ -20,7 +20,8 @@ function TaskManager() {
   const [editValue, setEditValue] = useState(null);
   const [createTask ] = useCreateTaskMutation();
   const response = useGetTasksQuery();
-  const [deleteTask] =useDeleteIdMutation();
+  const [deleteId] =useDeleteIdMutation();
+  const [updateTask] = useUpdateTaskMutation();
   const socket = socketIO.connect('http://localhost:4000');
 
 
@@ -101,7 +102,7 @@ function TaskManager() {
               <td>{value.title}</td>
               <td>{value.description}</td>
               <td>{value.priority}</td>
-              <td>{value.dueDate}</td>
+              <td>{new Date(value.dueDate).toLocaleString()}</td> 
               <td
                 className={
                   value.status === "Done"
