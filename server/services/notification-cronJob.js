@@ -22,15 +22,18 @@ const sendNotifications = async (taskDue, io) => {
 // this is the code that sends notifications to the frontend/web/client. kind of dispatching an event "tasksDue"
     io.emit('tasksDue', taskDue);
 
- // 1. TODO : set isSent True After sending Notification 
-
 
 // Here preparing payload to save in the database
     const notifications = taskDue.map(task => ({
       message: `Task due soon: ${task.title}`,
+      
     }));
 
-// saving notification in the database
+/* 
+----saving notification in the database-----
+*/
+
+ //TODO : 1. set isSent key to true after sending notification
     await Notification.insertMany(notifications);
 
   } catch (error) {
@@ -46,13 +49,13 @@ const scheduleNotificationJob = (io) => {
 
     try {
       const tasks = await Task.find();
-      // 2. TODO : Filter tasks where isSent is False
+      // 2. TODO : Filter tasks where isSent is False or they dont have isSent key.
 
       const tasksDue = getTasksDue(tasks, now, time, timeZone);
 
       if (tasksDue.length > 0) {
         await sendNotifications(tasksDue, io);
-        
+
       } else {
         console.log('No tasks due in the next 5 minutes');
       }
