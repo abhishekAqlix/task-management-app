@@ -1,38 +1,73 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px; 
+    line-height: 1.6; 
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa; 
+    color: #343a40;
   }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 500; 
+    color: #212529; 
+    margin-bottom: 1rem;
   }
-  to {
-    transform: rotate(360deg);
+  
+  button {
+    font-weight: 500;
+    font-size: 14px;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
   }
-}
+  
+  button:hover {
+    background-color: #007bff; 
+    color: white;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    background-color: white;
+  }
+  
+  table th, table td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #dee2e6; 
+  }
+  
+  table th {
+    background-color: #f1f3f5;
+    font-weight: 500;
+  }
+  
+  table tbody tr:nth-child(odd) {
+    background-color: #f8f9fa; 
+  }
+  
+  table tbody tr:hover {
+    background-color: #e9ecef; 
+  }
+  
+  .modal-content {
+    border-radius: 8px;
+    font-weight: 400;
+    padding: 20px;
+  }
+  
+  .modal-header {
+    font-weight: 500;
+    color: #212529;
+  }
+  
+  .modal-footer button {
+    margin-right: 10px;
+  }
+  
