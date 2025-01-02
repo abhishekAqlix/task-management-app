@@ -55,6 +55,7 @@ const editTask = async (req, res) => {
 
   const { title, description, priority, dueDate, status } = req.body;
   try {
+    io.emit('notificationUpdated', taskDue);
     const result = await Task.findByIdAndUpdate({ _id: req.params.id }, { title, description, priority, dueDate, status }, { new: true });
     res.status(200).json(result);
 

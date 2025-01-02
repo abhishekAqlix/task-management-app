@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import { MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem, MDBBadge } from 'mdb-react-ui-kit';
 import { FaBell } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 const socket = io('http://localhost:4000', { transports: ['websocket'] });
 
@@ -20,24 +21,27 @@ const NotificationDropdown = () => {
       console.error('Socket connection error:', err);
     });
 
-    // recieving tasksDue event from the server!!
     socket.on('tasksDue', (tasks) => {
       console.log('Received tasks:', tasks);
       const newNotifications = tasks.map(task => ({
         message: `Task due soon: ${task.title}`,
         id: task._id,
       }));
-      setNotifications(newNotifications
-      );
+      setNotifications(newNotifications);
       setNotificationCount(newNotifications.length);
+
+      newNotifications.forEach(notification => {
+        toast.info(notification.message);
+      });
     });
 
     return () => {
       socket.off('tasksDue');
       socket.off('connect');
       socket.off('connect_error');
+      socket.off('disconnect');
     };
-  }, []);
+  }, [notifications]);
 
   return (
     <div>
