@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import NotificationDropdown from "./NotficationDropdown";
 import { useCreateTaskMutation, useDeleteIdMutation, useGetTasksQuery, useUpdateTaskMutation } from "../services/apiCall";
 import socketIO from 'socket.io-client';
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -23,6 +24,7 @@ function TaskManager() {
   const [deleteId] =useDeleteIdMutation();
   const [updateTask] = useUpdateTaskMutation();
   const socket = socketIO.connect('http://localhost:4000');
+  const navigate= useNavigate();
 
 
   useEffect(()=>{
@@ -64,13 +66,23 @@ function TaskManager() {
       toast.error("deleted when task is Done or Invalid");
     }
   }
-
+   
+  function handleLogout(){
+   localStorage.clear();
+   navigate('/login')
+  }
   //response.data?.map((val)=>{
     // console.log( val.dueDate.split('T')[0])
     // const dueD =  new Date(val.dueDate);
     // const res =  dueD
     // console.log("res", res)
 //  })
+
+function isOverdue(dueDate) {
+  const now = new Date();
+  return new Date(dueDate) < now ;
+}
+
   return (
     <Container className="py-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
@@ -102,7 +114,7 @@ function TaskManager() {
               <td>{value.title}</td>
               <td>{value.description}</td>
               <td>{value.priority}</td>
-              <td>{new Date(value.dueDate).toLocaleString()}</td> 
+              <td className={isOverdue(value.dueDate) ? "bg-danger text-white" : " "}>{new Date(value.dueDate).toLocaleString()}</td> 
               <td
                 className={
                   value.status === "Done"
@@ -140,11 +152,15 @@ function TaskManager() {
       {showModal && (
         <Modle
           onOpen={() => setShowModal(true)}
-          onClose={() => setShowModal(false)}
+          onClose={() => {setShowModal(false)
+          setEditValue(null)}}
           onSave={handleSave}
           edit={editValue}
         />
       )}
+     <div className="mx-2 my-2">
+    <Button onClick={handleLogout} variant="outline-primary" className="mx-1" >Logout</Button>
+     </div>
     </Container>
   );
 }

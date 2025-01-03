@@ -3,8 +3,10 @@ import io from 'socket.io-client';
 import { MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem, MDBBadge } from 'mdb-react-ui-kit';
 import { FaBell } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
-const socket = io('http://localhost:4000', { transports: ['websocket'] });
+const socket = io('http://localhost:4000' ,
+{ transports: ['websocket'] });
 
 const NotificationDropdown = () => {
   const [notifications, setNotifications] = useState([]);
@@ -15,6 +17,7 @@ const NotificationDropdown = () => {
   useEffect(() => {
     socket.on('connect', () => {
       console.log('Connected to server for notification');
+
     });
 
     socket.on('connect_error', (err) => {
@@ -23,7 +26,9 @@ const NotificationDropdown = () => {
 
     socket.on('tasksDue', (tasks) => {
       console.log('Received tasks:', tasks);
-      const newNotifications = tasks.map(task => ({
+      const newNotifications = tasks.map(task => (
+        toast.success(`Task due soon: ${task.title}`),
+        {
         message: `Task due soon: ${task.title}`,
         id: task._id,
       }));
@@ -37,6 +42,8 @@ const NotificationDropdown = () => {
 
     return () => {
       socket.off('tasksDue');
+      socket.off('taskUpdated');
+      socket.off('taskDeleted');
       socket.off('connect');
       socket.off('connect_error');
       socket.off('disconnect');

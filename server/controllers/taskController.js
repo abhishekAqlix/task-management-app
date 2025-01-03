@@ -6,8 +6,8 @@ const Task = require('../models/Task');
 
 const getTask = async (req, res) => {
   try {
-    const tasks = await Task.find();
-    console.log("tasks", tasks)
+    const tasks = await Task.find({user : req.user._id});
+    //console.log("tasks", tasks)
     res.status(200).json(tasks);
   }
   catch (error) {
@@ -23,7 +23,7 @@ const createTask = async (req, res) => {
   const { title, description, priority, dueDate, status } = req.body;
   console.log("deDate--", dueDate)
   try {
-    const newTask = await Task.create({ title, description, priority, dueDate, status });
+    const newTask = await Task.create({ title, description, priority, dueDate, status , user : req.user });
     res.status(201).json(newTask);
   }
   catch (error) {
@@ -55,8 +55,7 @@ const editTask = async (req, res) => {
 
   const { title, description, priority, dueDate, status } = req.body;
   try {
-    io.emit('notificationUpdated', taskDue);
-    const result = await Task.findByIdAndUpdate({ _id: req.params.id }, { title, description, priority, dueDate, status }, { new: true });
+    const result = await Task.findByIdAndUpdate({ _id: req.params.id }, { title, description, priority, dueDate, status,isSent : false}, { new: true });
     res.status(200).json(result);
 
   }

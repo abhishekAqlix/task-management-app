@@ -6,6 +6,7 @@ const scheduleNotificationJob = require('./services/notification-cronJob');
 const taskRoutes = require('./routes/taskRoutes');
 const userRoutes = require('./routes/userRoutes');
 const { Server } = require('socket.io');
+const jwt =require("jsonwebtoken")
 
 const app = express();
 const port = 4000;
@@ -16,12 +17,13 @@ const io = new Server(server, {
     origin: "http://localhost:3000",
     methods: ["GET", "POST", "PUT", "DELETE"]
   }
-});
+}); 
 
 // Middlewares //
 app.use(express.json());
 app.use(cors());
 connectDB();
+
 
 app.use('/user', userRoutes);
 app.use('/api/task', taskRoutes);

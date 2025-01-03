@@ -17,11 +17,19 @@ const TaskSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  
   status: {
     type: String,
     default: 'pending',
   },
+  user :{
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User' ,
+   required : true
+  },
+  isSent : {
+    type: Boolean,
+    default: false,
+  }
 }, {
   timestamps: true, 
 });

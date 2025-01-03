@@ -24,7 +24,7 @@ const protect = async (req, res, next) => {
     }
 
     // Attach the user to the request object
-    req.user = currentUser;
+    req.user = currentUser
     next();
   } catch (err) {
     return res.status(401).json({ message: "Invalid token or unauthorized access." });

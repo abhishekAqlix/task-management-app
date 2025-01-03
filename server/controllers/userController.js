@@ -3,7 +3,7 @@ const User = require("../models/User");
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
-require("dotenv").config();
+require("dotenv").config();const storage = require('node-sessionstorage');
 
 const app = express();
 app.use(cookieParser());
@@ -22,13 +22,15 @@ const register = async (req, res) => {
     const users = req.body;
     const savedUser = await User.create(users);
     const token = signToken(savedUser._id);
+    sessionStorage.setItem('jwt', token);         //Storing token in session Storage
     return res.status(201).json({
       status: "success",
       token,
       data: {
         user: savedUser,
       },
-    });
+    }
+  );
   } catch (err) {
     console.error("Register Error:", err);
     return res.status(500).json({ error: "An error occurred during registration." });
