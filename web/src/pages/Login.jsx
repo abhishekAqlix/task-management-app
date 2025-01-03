@@ -18,10 +18,7 @@ function Login() {
         email,
         password,
       }
-      // ,{
-      // headers: {
-      //   Authorization: `Bearer ${response.data.token}`, 
-      // }}
+      
     );
 
       if (response.data.status === "success") {
@@ -60,7 +57,7 @@ function Login() {
   };
 
   return (
-    <GoogleOAuthProvider clientId="1035481739398-q8op22g2gepm54ugmvp1m4cpn1i46u35.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="286808975118-39hiskclm2lpgbr4rtf8jrq7fi6gaecv.apps.googleusercontent.com">
       <div className="d-flex justify-content-center bg-secondary vh-100 align-items-center">
         <div className="bg-white p-3 rounded w-25">
           <h2>Login</h2>
@@ -105,7 +102,7 @@ function Login() {
           >
             Register
           </Link>
-          <div className="mt-3">
+          <div className=" mt-3">
             <GoogleLogin
               onSuccess={handleGoogleSuccess}
               onError={() => {

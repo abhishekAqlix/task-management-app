@@ -3,7 +3,8 @@ const User = require("../models/User");
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
-require("dotenv").config();const storage = require('node-sessionstorage');
+require("dotenv").config();
+const storage = require('node-sessionstorage');
 
 const app = express();
 app.use(cookieParser());
@@ -22,7 +23,9 @@ const register = async (req, res) => {
     const users = req.body;
     const savedUser = await User.create(users);
     const token = signToken(savedUser._id);
-    sessionStorage.setItem('jwt', token);         //Storing token in session Storage
+   
+    storage.setItem(`token_${savedUser._id}`, token); //Storing token in session Storage
+    
     return res.status(201).json({
       status: "success",
       token,
@@ -52,12 +55,15 @@ const login = async (req, res) => {
     }
 
     const token = signToken(user._id);
+      
+    storage.setItem(`token_${user._id}`, token);
 
     return res.status(200).json({
       status: "success",
       token,
       message: "Successfully logged in.",
     });
+
   } catch (err) {
     console.error("Login Error:", err);
     return res.status(500).json({ error: " error occurred during login." });
@@ -69,7 +75,7 @@ const googleSignIn = async (req, res) => {
   const { credential } = req.body;
   
   try {
-    console.log("credential", credential);
+    //console.log("credential", credential);
     const ticket = await client.verifyIdToken({
       idToken: credential,
       audience: process.env.GOOGLE_CLIENT_ID,
@@ -82,6 +88,8 @@ const googleSignIn = async (req, res) => {
     }
 
     const token = signToken(user._id);
+    storage.setItem(`token_${user._id}`, token);
+    
     return res.status(200).json({
       status: "success",
       token,
@@ -94,5 +102,8 @@ const googleSignIn = async (req, res) => {
     return res.status(500).json({ error: "An error occurred." });
   }
 };
+
+
+
 
 module.exports = { register, login, googleSignIn };

@@ -50,8 +50,12 @@ createTask : builder.mutation({
      }},
      invalidatesTags: ['Task'],
   }),
-  
-
+    logOut : builder.mutation({
+      query : ()=>({
+          url : '/logout',
+          method : 'POST'
+          
+      }),})
 })
 })
-export const { useGetTasksQuery ,useUpdateTaskMutation  , useDeleteIdMutation  , useCreateTaskMutation} = apiCall
+export const { useGetTasksQuery ,useUpdateTaskMutation  , useDeleteIdMutation  , useCreateTaskMutation , useLogOutMutation} = apiCall

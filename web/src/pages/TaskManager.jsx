@@ -7,10 +7,9 @@ import { addTask, editTask , deleteTask} from "../redux/taskSlice";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import NotificationDropdown from "./NotficationDropdown";
-import { useCreateTaskMutation, useDeleteIdMutation, useGetTasksQuery, useUpdateTaskMutation } from "../services/apiCall";
+import { useCreateTaskMutation, useDeleteIdMutation, useGetTasksQuery, useLogOutMutation,useUpdateTaskMutation } from "../services/apiCall";
 import socketIO from 'socket.io-client';
 import { useNavigate } from "react-router-dom";
-
 
 
 
@@ -21,6 +20,7 @@ function TaskManager() {
   const [editValue, setEditValue] = useState(null);
   const [createTask ] = useCreateTaskMutation();
   const response = useGetTasksQuery();
+  const [logOut] = useLogOutMutation();
   const [deleteId] =useDeleteIdMutation();
   const [updateTask] = useUpdateTaskMutation();
   const socket = socketIO.connect('http://localhost:4000');
@@ -30,6 +30,7 @@ function TaskManager() {
   useEffect(()=>{
     if(response.isLoading){
       console.log('loading....');
+
       }
       if(response.isSuccess){
         console.log("response",response)
@@ -67,9 +68,18 @@ function TaskManager() {
     }
   }
    
-  function handleLogout(){
-   localStorage.clear();
-   navigate('/login')
+  const handleLogout = async()=>{
+   try{
+    logOut();
+
+    localStorage.clear();
+    navigate('/login')
+   }
+  catch(err)
+  {
+    console.error("ERROR" , err);
+  }
+  
   }
   //response.data?.map((val)=>{
     // console.log( val.dueDate.split('T')[0])
@@ -144,7 +154,6 @@ function isOverdue(dueDate) {
                   <FaTrashAlt className="me-1" /> Delete
                 </Button>
               </td>
-
             </tr>
           ))}
         </tbody>
@@ -164,6 +173,5 @@ function isOverdue(dueDate) {
     </Container>
   );
 }
-
 
 export default TaskManager;

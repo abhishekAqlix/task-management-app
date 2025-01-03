@@ -1,5 +1,6 @@
 const { Error } = require('mongoose');
 const Task = require('../models/Task');
+const storage = require('node-sessionstorage')
 
 // @desc    Fetch all tasks
 // @route   GET /api/tasks
@@ -17,13 +18,13 @@ const getTask = async (req, res) => {
 };
 
 // @route   POST /api/tasks
-// 
 
 const createTask = async (req, res) => {
   const { title, description, priority, dueDate, status } = req.body;
   console.log("deDate--", dueDate)
   try {
     const newTask = await Task.create({ title, description, priority, dueDate, status , user : req.user });
+
     res.status(201).json(newTask);
   }
   catch (error) {
@@ -31,6 +32,7 @@ const createTask = async (req, res) => {
     res.status(500).json({ error });
   }
 };
+
 // delete Task
 const deleteTask = async (req, res) => {
   try {
@@ -39,9 +41,8 @@ const deleteTask = async (req, res) => {
       return res.status(500).send({ msg: "Task not exists!" });
     }
     console.log("task", task)
-
     const response = await Task.deleteOne({ _id: req.params.id });
-    //await res.save();
+    
     return res.status(201);
   }
   catch (error) {
@@ -51,11 +52,13 @@ const deleteTask = async (req, res) => {
 };
 
 //edit or update task
+
 const editTask = async (req, res) => {
 
   const { title, description, priority, dueDate, status } = req.body;
   try {
     const result = await Task.findByIdAndUpdate({ _id: req.params.id }, { title, description, priority, dueDate, status,isSent : false}, { new: true });
+   
     res.status(200).json(result);
 
   }
@@ -65,6 +68,17 @@ const editTask = async (req, res) => {
   }
 };
 
+// logout 
+  const logOut = async (req, res) => {
+  try {
+    const userId  = req.user._id; 
+    storage.removeItem(`token_${userId}`);
+     console.log('successfully logged out.' , userId)
+    return res.status(200).json({ message: "Successfully logged out." });
+  } catch (err) {
+    console.error("Logout Error:", err);
+    return res.status(500).json({ error: "An error occurred during logout." });
+  }
+};
 
-
-module.exports = { getTask, createTask, deleteTask, editTask };
+module.exports = { getTask, createTask, deleteTask, editTask, logOut };

@@ -6,7 +6,7 @@ const scheduleNotificationJob = require('./services/notification-cronJob');
 const taskRoutes = require('./routes/taskRoutes');
 const userRoutes = require('./routes/userRoutes');
 const { Server } = require('socket.io');
-const jwt =require("jsonwebtoken")
+
 
 const app = express();
 const port = 4000;
@@ -39,7 +39,6 @@ io.on('connection', (socket) => {
     console.log('user disconnected');
   });
 });
-
 scheduleNotificationJob(io);
 
 server.listen(port, () => {

@@ -16,7 +16,7 @@ function App() {
   <Routes>
     <Route path='/' element={<Register/>}/>
     <Route path='/login' element={<Login/>}/>
-    <Route path='/task' element={<TaskManager/>}/>
+   {localStorage.getItem('token') && <Route path='/task' element={<TaskManager/>}/>}
   </Routes>
   </BrowserRouter>
        

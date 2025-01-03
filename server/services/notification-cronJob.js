@@ -48,7 +48,6 @@ const sendNotifications = async (taskDue, io) => {
       { $set: { isSent: true } }
     );
 
-
   } catch (error) {
     console.error('Error sending notifications:', error);
   }
@@ -59,30 +58,36 @@ const scheduleNotificationJob = (io) => {
     const timeZone = getServerTimeZone();
     const now = moment().tz(timeZone);
     const time = moment(now).add(5, 'minutes');
-
-  
     
      try {
+    const allUsers = await User.find(); 
+    for (const user of allUsers) {
+      const token = storage.getItem(`token_${user._id}`);
+      if (!token) {
+        console.error(`Token is missing for user: ${user._id}`);
+        continue;
+      }
 
-      const token  = sessionStorage.getItem('token');
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const userId =  decoded.id 
-      console.log("deecode.id" , userId)                
+      if (!decoded || !decoded.id) {
+        console.error('Invalid token');
+        continue;
+      }
 
+      const tasks = await Task.find({ isSent: false, user: decoded.id });
+      console.log("Tasks for user", user._id, tasks);
 
-      const tasks = await Task.find({isSent : false}  );        //,{user : userId}
-      console.log( "isSent = false" , tasks);
-    
      // 2. TODO : Filter tasks where isSent is False or they dont have isSent key.
       const tasksDue = getTasksDue(tasks, now, time, timeZone);
 
       if (tasksDue.length > 0) {
+
         await sendNotifications(tasksDue, io);
 
       } else {
         console.log('No tasks due in the next 5 minutes');
       }
-    }  catch (err) {
+    }}  catch (err) {
       console.error('Error fetching tasks due soon:', err);
     }
   
