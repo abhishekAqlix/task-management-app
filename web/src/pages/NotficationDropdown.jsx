@@ -30,20 +30,35 @@ const NotificationDropdown = () => {
         message: `Task due soon: ${task.title}`,
         id: task._id,
       }));
-      setNotifications(newNotifications);
-      setNotificationCount(newNotifications.length);
+      setNotifications((prev) => [...prev,newNotifications]);
+      setNotificationCount((prevCount) => prevCount + newNotifications.length);
          
       newNotifications.forEach(notification => {
         toast.info(notification.message);
       });
-
-     //TODO: task update and delete notification
-      
-
     });
+   
+// task updated notification
+      socket.on('taskUpdated', (data) => {
+    setNotifications((prev) => [...prev,data]);
+    setNotificationCount((prevCount) => prevCount + 1);
+    toast.success(data.message);
+  });
+
+
+
+ // task deleted notification
+  socket.on('taskDeleted', (data) => {
+     setNotifications((prev) => [...prev, data]);
+    setNotificationCount((prevCount) => prevCount + 1);
+    toast.error(data.message);
+ });
+
 
     return () => {
       socket.off('tasksDue');
+      socket.off('taskUpdated');
+      socket.off('taskDeleted');
       socket.off('connect');
       socket.off('connect_error');
       socket.off('disconnect');

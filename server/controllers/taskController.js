@@ -1,6 +1,8 @@
 const { Error } = require('mongoose');
 const Task = require('../models/Task');
 const storage = require('node-sessionstorage')
+const io = require('../index.js');
+
 
 // @desc    Fetch all tasks
 // @route   GET /api/tasks
@@ -34,7 +36,7 @@ const createTask = async (req, res) => {
 };
 
 // delete Task
-const deleteTask = async (req, res) => {
+const deleteTask = async (req, res,io) => {
   try {
     const task = await Task.findOne({ _id: req.params.id });
     if (!task) {
@@ -42,7 +44,10 @@ const deleteTask = async (req, res) => {
     }
     console.log("task", task)
     const response = await Task.deleteOne({ _id: req.params.id });
-    
+    io.emit('taskDeleted', { 
+      message: `Task deleted: ${task.title}`, 
+      taskId: task._id 
+    });
     return res.status(201);
   }
   catch (error) {
@@ -52,13 +57,16 @@ const deleteTask = async (req, res) => {
 };
 
 //edit or update task
-
-const editTask = async (req, res) => {
-
+const editTask = async (req, res ,io) => {
   const { title, description, priority, dueDate, status } = req.body;
-  try {
+  
+ try {
     const result = await Task.findByIdAndUpdate({ _id: req.params.id }, { title, description, priority, dueDate, status,isSent : false}, { new: true });
-   
+    io.emit('taskUpdated', { 
+      message: `Task updated: ${result.title}`, 
+      taskId: result._id 
+    });
+
     res.status(200).json(result);
 
   }
@@ -82,3 +90,5 @@ const editTask = async (req, res) => {
 };
 
 module.exports = { getTask, createTask, deleteTask, editTask, logOut };
+
+

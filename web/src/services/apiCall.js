@@ -30,7 +30,7 @@ deleteId : builder.mutation({
              url :`${id}`,
              method : 'DELETE'
         }),
-        invalidatesTags: ['Task'],
+    invalidatesTags: ['Task'],
 }),
 createTask : builder.mutation({
     query : (newUser)=>({

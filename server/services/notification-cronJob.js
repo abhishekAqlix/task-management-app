@@ -42,7 +42,9 @@ const sendNotifications = async (taskDue, io) => {
 
  //TODO : 1. set isSent key to true after sending notification
     await Notification.insertMany(notifications);
+    
    const taskId = taskDue.map((task) => task._id)
+
     await Task.updateMany(
       { _id: {$in: taskId} },
       { $set: { isSent: true } }
