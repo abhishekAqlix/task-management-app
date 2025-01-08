@@ -30,7 +30,7 @@ const NotificationDropdown = () => {
         message: `Task due soon: ${task.title}`,
         id: task._id,
       }));
-      setNotifications((prev) => [...prev,newNotifications]);
+      setNotifications((prev) => [...prev, ...newNotifications]);
       setNotificationCount((prevCount) => prevCount + newNotifications.length);
          
       newNotifications.forEach(notification => {
@@ -76,7 +76,7 @@ const NotificationDropdown = () => {
             </MDBBadge>
           )}
         </MDBDropdownToggle>
-        <MDBDropdownMenu>
+        <MDBDropdownMenu >
           {notifications.length > 0 ? (
             notifications.map((notification) => (
               <MDBDropdownItem key={notification.id} link as="button">

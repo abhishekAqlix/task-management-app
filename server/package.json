@@ -16,6 +16,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "google-auth-library": "^9.15.0",
+    "html-to-text": "^9.0.5",
     "jsonwebtoken": "^9.0.2",
     "moment-timezone": "^0.5.46",
     "mongodb": "^6.12.0",
@@ -24,6 +25,7 @@
     "node-sessionstorage": "^1.0.0",
     "nodemailer": "^6.9.16",
     "nodemon": "^3.1.9",
+    "puppeteer": "^23.11.1",
     "socket.io": "^4.8.1",
     "validator": "^13.12.0",
     "websocket": "^1.0.35"

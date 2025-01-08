@@ -1,35 +1,32 @@
 const nodemailer = require("nodemailer");
 
-function sendEmail(receiverDetails) {
-    const transporter = nodemailer.createTransport({
-        service: "gmail",
-        secure: true,
-        port: 465,
-        auth: {
-            user: "deepika.tripathi@aqlix.com",
-            pass: "lwoj yivb hejr vhk",
-        },
-    });
+require('dotenv').config(); 
 
-    transporter.sendMail(receiverDetails, (error, emailRes) => {
-        if (error) {
-            console.log("Error:", error);
-        } else {
-            console.log("Email Sent:", emailRes);
-        }
-    });
-}
 
-const receiver = {
-    from: "deepika.tripathi@aqlix.com",
-    to: "diptri6657@gmail.com",
-    subject: "✔",
-    text: "Hello world?",
-    html: "<b>Hello world?</b>",
+ async function sendEmail(receiverDetails) {
+
+const transporter = nodemailer.createTransport({
+    service : "gmail",
+    secure :true,
+    port:465 ,
+    auth : {
+        user :process.env.SENDER_EMAIL ,
+       pass : process.env.SENDER_PASSWORD
+    }
+  });
+
+    try {
+        const emailRes = await transporter.sendMail(receiverDetails);
+        console.log('Email sent:');
+        //res.send('Email sent successfully!');
+      } catch (error) {
+        console.error('Error sending email:', error);
+        //res.status(500).send('Failed to send email.');
+      }
+
 };
 
-// Call the function
-sendEmail(receiver);
+module.exports = {sendEmail};
 
 
 
